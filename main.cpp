@@ -3,6 +3,7 @@
 void welcome();
 int chooseNumber();
 bool checkAnswer(int num);
+int generateNumber();
 
 int main()
 {
