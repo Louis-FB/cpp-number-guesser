@@ -1,35 +1,128 @@
 #include <iostream>
+#include <cassert>
+#include "random.h"
+#include <limits>
 
-void welcome();
-int chooseNumber();
-bool checkAnswer(int num);
-int generateNumber();
+int makeGuess(int rounds);
+bool game();
+bool checkAnswer(int randomNumber, int guess);
+bool keepPlaying();
+
+void ignoreLine()
+{
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+}
 
 int main()
 {
-    bool play{true};
-    welcome();
 
-    do
+    while (true)
     {
-        int number{chooseNumber()};
-        std::cout << "You chose " << number << '\n';
-    } while (play);
+
+        std::cout << "Let's play a game. I'm thinking of a number between 1 and 100. You have 7 tries to guess what it is.\n";
+        if (!game())
+        {
+            std::cout << "Thanks for playing!\n";
+            return false;
+        }
+    }
 
     return 0;
 }
 
-void welcome()
+bool game()
 {
-    std::cout << "Welcome to the number guessing game!\n";
-    std::cout << "Guess a number between 0 and 100. You have 6 chances!\n";
+    int randomNumber{Random::get(1, 100)};
+    assert(randomNumber > 0 && randomNumber <= 100 && "Incorrect range\n");
+    int chances{7};
+
+    for (int rounds{1}; rounds <= chances; rounds++)
+    {
+        int num{makeGuess(rounds)};
+        if (checkAnswer(randomNumber, num))
+        {
+            std::cout << "Correct! You win!\n";
+
+            return keepPlaying();
+        }
+    }
+
+    std::cout << "You lost! You ran out of turns.\n";
+    return keepPlaying();
 }
 
-int chooseNumber()
+bool keepPlaying()
 {
-    std::cout << "Enter a number 0-100: ";
-    int x{};
-    std::cin >> x;
+    while (true)
+    {
+        std::cout << "Do you want to play again (y/n) ? ";
+        char question{};
+        std::cin >> question;
+        if (!std::cin)
+        {
+            std::cin.clear();
+            ignoreLine();
+        }
+        switch (question)
+        {
+        case 'y':
+            return true;
 
-    return x;
+        case 'n':
+            return false;
+        default:
+            std::cout << "Enter a correct input.\n";
+            break;
+        }
+    }
+}
+
+int makeGuess(int rounds)
+{
+    int num{};
+    while (true)
+    {
+        std::cout << "Guess #" << rounds << ": ";
+        std::cin >> num;
+        if (!std::cin)
+        {
+            std::cin.clear();
+            ignoreLine();
+        }
+
+        else if (num < 1)
+        {
+            std::cout << "Number too low! try again\n";
+            continue;
+        }
+        else if (num > 100)
+        {
+            std::cout << "Number too high! try again.\n";
+            continue;
+        }
+        else
+        {
+            break;
+        }
+    }
+    ignoreLine();
+    return num;
+}
+
+bool checkAnswer(int randomNumber, int guess)
+{
+    if (guess < randomNumber)
+    {
+        std::cout << "Your guess is too low.\n";
+        return false;
+    }
+    else if (guess > randomNumber)
+    {
+        std::cout << "Your guess is too high.\n";
+        return false;
+    }
+    else
+    {
+        return true;
+    }
 }
