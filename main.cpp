@@ -15,13 +15,12 @@ void ignoreLine()
 
 int main()
 {
-
     while (true)
     {
-
         std::cout << "Let's play a game. I'm thinking of a number between 1 and 100. You have 7 tries to guess what it is.\n";
         if (!game())
         {
+
             std::cout << "Thanks for playing!\n";
             return false;
         }
@@ -63,6 +62,7 @@ bool keepPlaying()
             std::cin.clear();
             ignoreLine();
         }
+        ignoreLine();
         switch (question)
         {
         case 'y':
@@ -70,6 +70,7 @@ bool keepPlaying()
 
         case 'n':
             return false;
+
         default:
             std::cout << "Enter a correct input.\n";
             break;
@@ -87,7 +88,7 @@ int makeGuess(int rounds)
         if (!std::cin)
         {
             std::cin.clear();
-            ignoreLine();
+            //  ignoreLine();
         }
 
         else if (num < 1)
