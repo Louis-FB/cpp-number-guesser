@@ -1,3 +1,4 @@
 ﻿# C++ Number Guessing Game
-Guess a number (1 - 100)
+1. Compile
+2. Guess a number (1 - 100)
 
